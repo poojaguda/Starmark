@@ -1,103 +1,149 @@
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SampleFrameworksApp.Assignment
+namespace MedicalResearchApplication
 {
-    class details
+    enum Severity
     {
-        public string name { get; set; }
-        public string severity { get; set; }
-        public string cause { get; set; }
-        public string description { get; set; }
-        public string symptoms { get; set; }
+        low,high,medium
+    }
+    enum Cause
+    {
+        InternalFactor, ExternalFactor
     }
 
-
-    class AddingDisease
+    class Disease
     {
-        private details[] det = null;
-        private int size = 0;
-        public AddingDisease(int size)
+        public string DiseaseName { get; set; }
+        public Severity DiseaseSeverity { get; set; }
+        public Cause DiseaseCause { get; set; }
+        public string DiseaseDescription { get; set; }
+    }
+
+    class Symptom
+    {
+        public string SymptomName { get; set; }
+        public Disease DiseaseName { get; set; }
+        public string SymptomDescriptiom { get; set; }
+    }
+
+    class Patient
+    {
+        public string PatientName { get; set; }
+    }
+
+    class DiseaseManager
+    {
+        static Disease dis = new Disease();
+        public static void AddDisease()
         {
-            this.size = size;
-            //Console.WriteLine("hi");
-            det = new details[size];
-            // Console.WriteLine(size);
-            //Console.WriteLine("bye");
-
-        }
-        public void AddDisease(details dts)
-        {
-            //Console.WriteLine(size);
-            for (int i = 0; i < size; i++)
-            {
-
-                //Console.WriteLine(  i);
-                if (det[i] == null)
-                {
-                    det[i] = new details { name = dts.name, severity = dts.severity, cause = dts.cause, description = dts.description };
-                    Console.WriteLine("Added succesfully");
-                    Console.WriteLine("-----------------------------------------------------------------------------");
-                    Symptoms(dts);
-                    return;
-
-                }
-                else
-                {
-                    //Console.WriteLine("hi");
-                    throw new Exception("Adding failed");
-                }
-
-            }
-
-        }
-        public static void Symptoms(details dts)
-        {
-            Console.WriteLine("Enter the symptoms for " + dts.name);
-            Console.WriteLine("Enter the disease name");
+            ////////////////////Disease Name////////////////////
+            Console.WriteLine("-------------------------------------------------");
+           
+            Console.WriteLine("Enter the Disease Name");
             string name = Console.ReadLine();
-            Console.WriteLine("Enter the symptom name");
-            string symp = Console.ReadLine();
-            Console.WriteLine("Enter the description");
-            string desc = Console.ReadLine();
-        }
-        public static void operation()
-        {
-            Console.WriteLine("Enter the name of the disease");
-            string name = Console.ReadLine();
-            Console.WriteLine("Enter the Severity of the disease");
+            dis.DiseaseName = name;
+
+            ////////////////////Severity////////////////////
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("Enter the Severity");
+            Console.WriteLine("1.Low" +"\n2.Medium" + "\n3.High");
             string severity = Console.ReadLine();
-            Console.WriteLine("Enter the cause of the disease");
+            Severity convertedsev = (Severity)Enum.Parse(typeof(Severity), severity);
+            dis.DiseaseSeverity = convertedsev;
+
+            ////////////////////Cause////////////////////
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("Enter the cause");
+            Console.WriteLine("1.Internal Factor"+"\n2.External Factor");
             string cause = Console.ReadLine();
-            Console.WriteLine("Enter the Description of the disease");
-            string description = Console.ReadLine();
-            details dts = new details { name = name, severity = severity, cause = cause, description = description };
-            bl.AddDisease(dts);
+            Cause convertedcause = (Cause)Enum.Parse(typeof(Cause), cause);
+            dis.DiseaseCause = convertedcause;
 
-
-
-
+            ////////////////////Description///////////////
+            Exception:
+            Console.WriteLine("Enter the Description ");
+            string desc = Console.ReadLine();
+            //Console.WriteLine(desc.Length);
+            if (desc.Length < 30)
+            {
+                Console.WriteLine("Description is less than 30 letter");
+                goto Exception;
+            }
+             
+            Console.WriteLine("Disease added successfully");
+            Console.WriteLine("-------------------------------------------------");
         }
-        public static AddingDisease bl = null;
-        public static void useful()
+
+        public static void AddSymptom()
         {
-            Console.WriteLine("enter the size");
-            int size = Convert.ToInt32(Console.ReadLine());
-            bl = new AddingDisease(size);
+            //Disease dis = new Disease();
+            //dis.DiseaseName = Console.ReadLine();
+            //Console.WriteLine(dis.DiseaseName);
+
+            Console.WriteLine("Enter the Disease Name");
+            string name = Console.ReadLine();
+            if (dis.DiseaseName == name)
+            {
+                Symptom sym = new Symptom();
+                Console.WriteLine("-------------------------------------------------");
+                Console.WriteLine("Enter the Symptom");
+                string symptom = Console.ReadLine();
+                sym.SymptomName = symptom;
+                Console.WriteLine("Symptom added successfully");
+            }
+            else
+                Console.WriteLine("Disease not found");
+            Console.WriteLine("-------------------------------------------------");
+
+            Console.WriteLine("Enter the Description ");
+            string desc = Console.ReadLine();
+            Console.WriteLine("-------------------------------------------------");
+        }
+
+        public static void CheckPatient()
+        {
+            Patient pat = new Patient();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("Enter the Patient Name");
+            string name = Console.ReadLine();
+            pat.PatientName = name;
+
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine("Enter the Symptom");
 
         }
+        
     }
-
-    class Diesease
+    
+    class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("The details of the Diseases");
-            AddingDisease.useful();
-            AddingDisease.operation();
+            
+            while (true)
+            {
+                Console.WriteLine("Press 1 to Add Disease");
+                Console.WriteLine("Press 2 to Add Sympton to the Disease:");
+                Console.WriteLine("Press 3 to Check Patient");
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        DiseaseManager.AddDisease();
+                        break;
+                    case 2:
+                        DiseaseManager.AddSymptom();
+                        break;
+                    case 3:
+                        DiseaseManager.CheckPatient();
+                        break;
+                }
+            } 
         }
-
     }
-}
-
-
+} 
